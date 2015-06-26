@@ -41,7 +41,7 @@ class MystemOCTagger(object):
 	# matches analysis with original tokens indices   
 	def match_analyzed_tokens(self, tokens_index, analyzed):
 		analysis_indexed = {}
-		unindexed = []
+		#unindexed = []
 		for t in analyzed:
 			t_text = t.get('text') 
 			if t_text in tokens_index:
@@ -49,10 +49,29 @@ class MystemOCTagger(object):
 				if (len(tokens_index.get(t_text)) == 0):
 					tokens_index.pop(t_text)
 				analysis_indexed[idx] = t.get('analysis')
-			else:
-				unindexed.append(t_text)
+			#else:
+				#word = t_text.strip()
+				#word = t_text.strip(',.][()«»–-—:% \n')
+				#if len(word) > 0:
+				#	unindexed.append(word)
 
-		print(unindexed)
+		#not_analyzed = []
+		#if len(tokens_index) > 0:
+		#	for t in tokens_index:
+		#		word = t.strip(',.][()«»–-—:% \n')
+		#		if len(word) > 0:
+		#			not_analyzed.append(word)
+
+		#if len(not_analyzed) > 0:
+			#f_unindexed = open('mismatch.txt', 'a+')
+			#f_unindexed.write('oc ')
+			#f_unindexed.write(str(not_analyzed)+'  ')
+
+
+		#if len(unindexed) > 0:
+		#	f_unindexed = open('mismatch.txt', 'a+')
+		#	f_unindexed.write(' ')
+		#	f_unindexed.write(str(unindexed)+'\n')
 
 		return analysis_indexed
 
