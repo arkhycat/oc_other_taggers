@@ -7,20 +7,21 @@ class MystemOCTagger(object):
 		self.mystem_inst = Mystem()
 
 	def run_and_convert(self, input_file, output_file):
-		f_in = open(input_file)
+		f_in = open(input_file, 'rb')
 		f_out = open(output_file, 'w+')
-		tree = etree.parse(f_in)
-		for sentence_tree in tree.getroot().iter('sentence'):
-			sentence = sentence_tree.find('source')
+		context = etree.iterparse(f_in, tag='sentence')
+		for event, sentence_elem in context:
+			sentence = sentence_elem.find('source')
 			analyzed = self.analyze_sentence(sentence.text)
-			tokens_tree = sentence_tree.find('tokens')
+			tokens_tree = sentence_elem.find('tokens')
 			tokens = self.extract_tokens(tokens_tree)
 			matched = self.match_analyzed_tokens(tokens, analyzed)
 
 			result = self.analyzed_to_csv_list(matched)
 			for s in result:
 				f_out.write(s+'\n')
-			#f_out.write(str(analyzed))
+			
+			sentence_elem.clear()
 
 	def analyze_sentence(self, sentence):
 		return self.mystem_inst.analyze(sentence)
