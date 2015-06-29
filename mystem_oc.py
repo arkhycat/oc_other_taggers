@@ -9,7 +9,8 @@ class MystemOCTagger(object):
 	def __init__(self):
 		self.mystem_inst = Mystem()
 
-	def run_and_convert(self, input_file, output_file):
+
+	def run_and_convert(self, input_file, output_file, strict_match = False):
 		f_in = open(input_file, 'rb')
 		f_out = open(output_file, 'w+')
 		context = etree.iterparse(f_in, tag='sentence')
@@ -18,7 +19,7 @@ class MystemOCTagger(object):
 			analyzed = self.analyze_sentence(sentence.text)
 			tokens_tree = sentence_elem.find('tokens')
 			tokens = self.extract_tokens(tokens_tree)
-			matched = self.match_analyzed_tokens(tokens, analyzed)
+			matched = self.match_analyzed_tokens(tokens, analyzed, strict_match)
 
 			result = self.analyzed_to_csv_list(matched)
 			for s in result:
@@ -46,7 +47,7 @@ class MystemOCTagger(object):
 
 
 	# matches analysis with original tokens indices   
-	def match_analyzed_tokens(self, tokens_index, analyzed):
+	def match_analyzed_tokens(self, tokens_index, analyzed, strict_match = False):
 		analysis_indexed = {}
 		unindexed = []
 		for t in analyzed:
@@ -61,27 +62,27 @@ class MystemOCTagger(object):
 				else:
 					unindexed.append(t)
 
-		analysis_not_strict = {}
+		if (not strict_match):
+			analysis_not_strict = {}
+			if len(tokens_index) > 0:
+				analysis_not_strict = self.match_not_strict(tokens_index, unindexed)
+
+			analysis_indexed.update(analysis_not_strict)
+
+		not_analyzed = []
 		if len(tokens_index) > 0:
-			analysis_not_strict = self.match_not_strict(tokens_index, unindexed)
+			for t in tokens_index:
+				not_analyzed.append(t)
 
-		analysis_indexed.update(analysis_not_strict)
+		if len(not_analyzed) > 0:
+			f_unindexed = open('mismatch.txt', 'a+')
+			f_unindexed.write('oc ')
+			f_unindexed.write(str(not_analyzed)+'  ')
 
-#		not_analyzed = []
-#		if len(tokens_index) > 0:
-#			for t in tokens_index:
-#				not_analyzed.append(t)
-
-#		if len(not_analyzed) > 0:
-#			f_unindexed = open('mismatch.txt', 'a+')
-#			f_unindexed.write('oc ')
-#			f_unindexed.write(str(not_analyzed)+'  ')
-
-
-#		if len(unindexed) > 0:
-#			f_unindexed = open('mismatch.txt', 'a+')
-#			f_unindexed.write(' ')
-#			f_unindexed.write(str(unindexed)+'\n')
+			if len(unindexed) > 0:
+				f_unindexed = open('mismatch.txt', 'a+')
+				f_unindexed.write(' ')
+				f_unindexed.write(str(unindexed)+'\n')
 
 		return analysis_indexed
 
