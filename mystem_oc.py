@@ -3,7 +3,8 @@ from pymystem3 import Mystem
 
 #removes punctuation from ends of string
 def strip_word(str):
-	return str.strip(',.][()«»""–-—:%&?! \n')
+	str = str.strip(',.][(){}|«»"“–-—:;%&?!#•+-=*•’/\\ \n')
+	return str.strip("' \n")
 
 class MystemOCTagger(object):
 	def __init__(self):
@@ -81,8 +82,12 @@ class MystemOCTagger(object):
 
 			if len(unindexed) > 0:
 				f_unindexed = open('mismatch.txt', 'a+')
-				f_unindexed.write(' ')
-				f_unindexed.write(str(unindexed)+'\n')
+				for u in unindexed:
+					f_unindexed.write(' ')
+					f_unindexed.write(str(u.get('text')))
+
+			f_unindexed.write('\n')
+
 
 		return analysis_indexed
 
@@ -98,8 +103,6 @@ class MystemOCTagger(object):
 						analyzed.pop(i)
 						idx_list.remove(idx)
 						break
-					else:
-						print(t_indexed)
 
 		idx_copy = tokens_index.copy()
 		for t, i in idx_copy.items():

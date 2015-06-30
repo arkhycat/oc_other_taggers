@@ -30,8 +30,6 @@ def parse_args():
 	print(args)
 
 	strict_match = args.s
-	print(strict_match)
-
 	if (args.file and not args.list):
 		run_on_file(args.file, strict_match)
 	else:
