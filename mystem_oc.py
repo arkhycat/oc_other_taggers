@@ -75,18 +75,18 @@ class MystemOCTagger(object):
 			for t in tokens_index:
 				not_analyzed.append(t)
 
-		if len(not_analyzed) > 0:
-			f_unindexed = open('mismatch.txt', 'a+')
-			f_unindexed.write('oc ')
-			f_unindexed.write(str(not_analyzed)+'  ')
+#		if len(not_analyzed) > 0:
+#			f_unindexed = open('mismatch.txt', 'a+')
+#			f_unindexed.write('oc ')
+#			f_unindexed.write(str(not_analyzed)+'  ')
+#
+#			if len(unindexed) > 0:
+#				f_unindexed = open('mismatch.txt', 'a+')
+#				for u in unindexed:
+#					f_unindexed.write(' ')
+#					f_unindexed.write(str(u.get('text')))
 
-			if len(unindexed) > 0:
-				f_unindexed = open('mismatch.txt', 'a+')
-				for u in unindexed:
-					f_unindexed.write(' ')
-					f_unindexed.write(str(u.get('text')))
-
-			f_unindexed.write('\n')
+#			f_unindexed.write('\n')
 
 
 		return analysis_indexed
